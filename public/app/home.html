@@ -1,0 +1,135 @@
+<style>
+</style>
+<div ng-if="home.notification.content" class="notification-top animated fadeInRightBig">
+   <div class="row">
+      <div class="col-xs-12">
+         <span class="h5">
+         <em class="mr" ng-class="(home.notification.header !== 'SUCCESS')?'icon-check':'icon-info'"></em>
+         {{home.notification.content}}
+         </span>
+      </div>
+   </div>
+</div>
+<div class="row mv">
+   <div class="col-xs-12 pv animated" ng-class="searchClass">
+      <span class="h3" > Hello, User </span>
+   </div>
+   <!--<div class="col-xs-6 pv">
+      <div class="card text-center ">
+        <span class="h4"> Create Service Request </span>
+      </div>
+      </div>-->
+</div>
+<div class="row mv animated" ng-class="searchClass">
+   <div class="col-xs-8 pv">
+      <div class="input-group m-b">
+         <input type="text" class="no-border-rad form-control input-lg" ng-model="srSearch" placeholder="Search Service Requests">
+         <span class="input-group-addon bg-blue-dark no-border-rad ph"><em class="icon-magnifier"></em></span>
+      </div>
+   </div>
+   <div class="col-xs-4 pv">
+      <span class="btn btn-primary" ng-click="testSync()"> Sync </span>
+      <span class="btn btn-primary ml" ng-click="clearLocal()"> Clear </span>
+   </div>
+</div>
+<div class="row mv animated" ng-class="cardClass" ng-if="!srSearch">
+   <div class="col-xs-4 pv">
+      <div class="card text-center">
+         <p class="h5 m0 pv"> Today</p>
+         <p class="h1 m0 pb"> 2</p>
+      </div>
+   </div>
+   <div class="col-xs-4 pv">
+      <div class="card text-center">
+         <p class="h5 m0 pv"> This week</p>
+         <p class="h1 m0 pb"> 8</p>
+      </div>
+   </div>
+   <div class="col-xs-4 pv">
+      <div class="card text-center">
+         <p class="h5 m0 pv"> This month</p>
+         <p class="h1 m0 pb"> 22</p>
+      </div>
+   </div>
+</div>
+<div class="row " ng-class="{'section-break':!srSearch}">
+   <div class="col-xs-12 mv" ng-if="headerLoading">
+      <loader></loader>
+   </div>
+   <div class="col-xs-12" ng-if="!srSearch">
+      <span class="h4 text-blue-light animated " ng-class="srCardHeaderClass" ng-if="komList.length>0">Service Requests for Today</span>
+      <span class="h4 text-blue-light animated " ng-class="srCardHeaderClass" ng-if="komList.length===0">No Service Requests available</span>
+   </div>
+   <div class="col-xs-12 pv">
+      <div class="">
+         <div class="row">
+            <div ng-repeat="s in komList |  filter:srFilter | limitTo: 4 track by $index">
+               <div class="clearfix" ng-if="$index%2===0"></div>
+               <div class="col-xs-6">
+                  <div class="card sr-card bg-white mv animated " ng-class="srCardClass">
+                     <div class="pop-offline-button h4 m0 " ng-class="{'spin':(headerSavingId===s.srId)}" ng-click="saveOffline(s.srId)" ><em class='icon-cloud-download'></em></div>
+                     <div class="row text-blue ">
+                        <div class="col-xs-12">
+                           <p class="h4 m0" ng-click="viewSr(s)"> <em ng-if="s.submitFlag==='Y'" class="icon-check mr-xs"></em> {{s.srDescription}}</p>
+                           <p class="h6 m0 pt" ng-click="viewSr(s)">#{{s.srId}}</p>
+                        </div>
+                        <div class="col-xs-12 mt-sm">
+                           <div class="row">
+                              <div class="col-xs-4"><span class="text-sm mr">Customer</span></div>
+                              <div class="col-xs-8"><span class="h5 m0">{{s.customer}}</span></div>
+                           </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                           <div class="row">
+                              <div class="col-xs-4"><span class="text-sm mr">Model</span></div>
+                              <div class="col-xs-8"><span class="h5 m0">{{s.model}}</span></div>
+                           </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                           <div class="row">
+                              <div class="col-xs-4"><span class="text-sm mr">Contact</span></div>
+                              <div class="col-xs-8"><span class="h5 m0">{{s.customerContact}}</span></div>
+                           </div>
+                        </div>
+                        <div class="col-xs-12 ">
+                           <div class="row">
+                              <div class="col-xs-4"><span class="text-sm mr">Maintainance</span></div>
+                              <div class="col-xs-8"><span class="h5 m0">{{s.maintainance}}</span></div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!--<span ng-if="$index%2==0" class="sr-navigation sr-navigation-left h3 m0" ng-click="goToPrevSr()"><em class="icon-arrow-left"></em></span>
+                     <span ng-if="$index%2==1" class="sr-navigation sr-navigation-right h3 m0" ng-click="goToNextSr()"><em class="icon-arrow-right"></em></span>-->
+               </div>
+            </div>
+            <div class="col-xs-12">
+               <!--<div class="table-responsive">
+                  <table class="table">
+                  <thead>
+                  <tr>
+                  <th>SR#</th>
+                  <th>Model</th>
+                  
+                  <th>Customer</th>
+                  <th>Maintainance</th>
+                  
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="s in komList | limitTo: 2">
+                  <td>{{s.sr}}</td>
+                  <td>{{s.model}}</td>
+                  <td>{{s.customerName}}</td>
+                  <td>{{s.maintainance}}</td>
+                  
+                  </tr>
+                  
+                  </tbody>
+                  </table>
+                  </div>    -->      
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html ng-app="io">
+<head>
+
+<script type="text/javascript" src="scripts/jquery-3.2.1.min.js"></script> 
+<script type="text/javascript" src="scripts/angular.min.js"></script>	
+<script type="text/javascript" src="scripts/angular-ui-router.min.js"></script>	
+<script type="text/javascript" src="scripts/signature.js"></script>	
+	
+<script type="text/javascript" src="scripts/test-offline.js"></script>
+<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="app/app.controller.js"></script>	
+
+<link href="https://fonts.googleapis.com/css?family=Cabin:400,500,600,700" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="styles/fontAwesome/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="styles/simple-line-icons.css">
+<link rel="stylesheet" type="text/css" href="styles/animate.min.css">
+<link rel="stylesheet" type="text/css" href="styles/app.styles.css">
+
+
+
+</head>
+<body >
+
+<!-- Code | BEGIN -->
+
+	<div class="header">
+		<img src="resources/Logo.png" style="width: 13%;" >
+	</div>
+
+
+<div class="contentFrame pv" ng-controller="mainController">
+
+  <div class="row pv">
+    <!--    <div class="col-xs-12 ">
+<div class="row pv bb">
+<div class="col-xs-8">
+<span class="h2"> KOMORI </span><br>
+<span class="text-sm">KOMORI AMERICA CORPORATION</span>
+</div>
+<div class="col-xs-4 text-right">
+<span class="h4 m0"> <em  class=" ml icon-pointer" ng-class="(kom.location==='Y'?'text-primary':'text-mute')" uib-tootip='{{kom.locationInfo}}'></em></span><br>
+<span class='text-sm' ng-show='showLocInfo'> {{kom.locationInfo}}</span>
+
+</div>
+</div>
+
+</div>-->
+    <div class="col-xs-12 mt" >
+      <div class="" data-ui-view="">
+      </div>
+    </div>
+
+
+  </div>
+
+</div>
+<!-- Code | END -->
+	
+</body>
+</html>
