@@ -2,6 +2,7 @@ var app = angular.module('alwayson');
 
 app.service('appParams',function(){
 	/* shared param values */
+	var appParams = this;
 
 	this.setParams = function(key,value){
 		this[key] = value;
@@ -22,52 +23,7 @@ app.service('serverConnection',function($q,$http){
 	};
 });
 
-
-app.service('onlineStore',function($q,appParams,serverConnection,appParams){
-
-	//ABSTRACTION FOR ONLINE & OFFLINE DBS	
-
-	/* QUERY */
-	this.query = function(tableName,params){
-
-	};
-
-	/* SAVE | INSERT, UPDATE & DELETE */
-	this.saveRow = function(tableName,row){
-		this.saveAll(tableName,[row]);
-	};
-
-	this.saveAll = function(tableName,rows){
-
-	};
-
-
-});
-
-
-app.service('offlineStore',function($q,appParams,serverConnection,appParams){
-
-	//ABSTRACTION FOR ONLINE & OFFLINE DBS	
-
-	/* QUERY */
-	this.query = function(tableName,params){
-
-	};
-
-	/* SAVE | INSERT, UPDATE & DELETE */
-	this.saveRow = function(tableName,row){
-		this.saveAll(tableName,[row]);
-	};
-
-	this.saveAll = function(tableName,rows){
-
-	};
-
-
-});
-
-
-app.service('dbStore',function($q,onlineStore,offlineStore,appParams,serverConnection){
+app.service('dbStore',function($q){
 
 	//ABSTRACTION FOR ONLINE & OFFLINE DBS	
 
