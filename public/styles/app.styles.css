@@ -1,17 +1,23 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin:400,500,600,700');
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,500,600,700');
+@import url('https://fonts.googleapis.com/css?family=Questrial');
+@import url('https://fonts.googleapis.com/css?family=Cabin+Condensed:400,500,600,700');
 
 body {
-  background-color: #1E3D58;
+  /*background-color: #1E3D58; */
  /* background-color: #E8EEF1;
   color: #1E3D58;*/
-  font-family: 'Cabin', sans-serif;
+  background-color: #1E3D58;
+  /*font-family: 'Cabin', sans-serif;*/
+  font-family: 'Cabin Condensed', sans-serif;
+
 }
 
 
 #_root {
   background-color: #1E3D58;
-  font-family: 'Cabin', sans-serif;
-
+  /*font-family: 'Cabin', sans-serif;*/
+  font-family: 'Raleway', sans-serif;
 }
 
 
@@ -149,7 +155,7 @@ body {
   color: #fff;
   background-color: #43B0F1;
   left:330px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.95);
   padding: 15px 16px;
 }
 
@@ -162,7 +168,7 @@ body {
   color: #fff;
   background-color: #43B0F1;
   right: -7px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.95);
   padding: 16px 16px;
 }
 
@@ -175,7 +181,7 @@ body {
     color: #fff;
     background-color: #43B0F1;
     right: 20px;
-    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.95);
     padding: 11px 12px;
     z-index: 100;
 }
@@ -189,7 +195,7 @@ body {
   color: #fff;
   background-color: #43B0F1;
   right: 55px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.95);
   padding: 16px 16px;
 }
 
@@ -279,7 +285,7 @@ padding-right: 15px;
     color: #fff;
     background-color: #43B0F1;
     right: -8%;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.95);
     padding: 10px 15px 10px 15px;
     z-index: 99;
 }

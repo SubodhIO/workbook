@@ -18,6 +18,7 @@
 
    <div class="row mt animated slideInDown">
       <div class="col-xs-10 col-xs-offset-2">
+      
          <div class="row">
 
             <div class="col-xs-3" ng-if="kom.editSr!==true" ng-class="(kom.submitFlag!=='Y')?'col-xs-offset-6':'col-xs-offset-9'">
@@ -74,7 +75,7 @@
    </div>
    <div class="row mt animated slideInDown">
       <div class="col-xs-12 pt">
-         <div><span class="h3">{{kom.srDescription}}</span> </div>
+         <div><span class="h3 text-blue-light">{{kom.srDescription}}</span> </div>
          <div>
             <span class="h5">#</span><span class="h4 pv"> {{kom.srId }} </span> 
             <span class="h5" ng-if=" kom.submitFlag==='Y'  "><em class="ml icon-check"></em> Submitted</span>
@@ -192,11 +193,11 @@
                            <!--<span class="h4">American Greetings Group</span>-->
                            <div class="row">
                               <div class="col-xs-12">
-                                 <span><em class="fa mr" ng-click="kom.maintainance=1" ng-class="{'h5 mt-xs fa-star-o text-blue-light':kom.maintainance<=0,'fa-2x h4 fa-star mt-xs':kom.maintainance>0}"></em></span>
-                                 <span><i class="fa mr" ng-click="kom.maintainance=2" ng-class="{'h5 fa-star-o mt-xs text-blue-light':kom.maintainance<=1,'fa-2x h4 fa-star mt-xs':kom.maintainance>1}"></i></span> 
-                                 <span><i class="fa mr" ng-click="kom.maintainance=3" ng-class="{'h5 mt-xs fa-star-o text-blue-light':kom.maintainance<=2,'fa-2x h4 fa-star mt-xs':kom.maintainance>2}"></i></span>
-                                 <span><i class="fa mr" ng-click="kom.maintainance=4" ng-class="{'h5 mt-xs fa-star-o text-blue-light':kom.maintainance<=3,'fa-2x h4 fa-star mt-xs':kom.maintainance>3}"></i></span>
-                                 <span><i class="fa mr" ng-click="kom.maintainance=5" ng-class="{'h5 fa-star-o mt-xs text-blue-light':kom.maintainance<=4,'fa-2x h4 fa-star mt-xs':kom.maintainance>4}"></i></span>
+                                 <span><em class="fa mr" ng-click="kom.maintainance=1" ng-class="{'h5 mt-xs fa-star-o text-blue-light':kom.maintainance<=0,' h5 fa-star mt-xs':kom.maintainance>0}"></em></span>
+                                 <span><i class="fa mr" ng-click="kom.maintainance=2" ng-class="{'h5 fa-star-o mt-xs text-blue-light':kom.maintainance<=1,' h5 fa-star mt-xs':kom.maintainance>1}"></i></span> 
+                                 <span><i class="fa mr" ng-click="kom.maintainance=3" ng-class="{'h5 mt-xs fa-star-o text-blue-light':kom.maintainance<=2,' h5 fa-star mt-xs':kom.maintainance>2}"></i></span>
+                                 <span><i class="fa mr" ng-click="kom.maintainance=4" ng-class="{'h5 mt-xs fa-star-o text-blue-light':kom.maintainance<=3,' h5 fa-star mt-xs':kom.maintainance>3}"></i></span>
+                                 <span><i class="fa mr" ng-click="kom.maintainance=5" ng-class="{'h5 fa-star-o mt-xs text-blue-light':kom.maintainance<=4,' h5 fa-star mt-xs':kom.maintainance>4}"></i></span>
                               </div>
                            </div>
                         </div>
@@ -277,12 +278,21 @@
                      </div>
                   </div>
                   <div class="col-xs-4 pv">
-                     <span class="text-sm mr">Customer Notified</span>
-                     <div class="checkbox c-checkbox h4">
+                     <div class="row">
+                        <div class="text-sm col-xs-12">Customer Notified</div>
+                        <div class="col-xs-12">
+                           <em class="mr-xs fa fa-2x" ng-click="(kom.miNotified==='Y')?(kom.miNotified='N'):(kom.miNotified='Y')" ng-class="(kom.miNotified==='Y')?'fa-check-circle-o':'fa-circle-thin'"></em>
+                           Yes
+                        </div>
+                        
+                     </div>
+
+
+                     <!--<div class="checkbox c-checkbox h4">
                         <label>
                         <input type="checkbox" checked="" ng-model="kom.miNotified">
                         <span class="fa fa-check mr"></span>Yes</label>
-                     </div>
+                     </div>-->
                   </div>
                </div>
                <div class="row " ng-if="kom.editSr===true">
@@ -293,12 +303,23 @@
                      </div>
                   </div>
                   <div class="col-xs-4 pv">
-                     <span class="text-sm mr">Customer Notified</span>
+
+                     <div class="row">
+                        <div class="text-sm col-xs-12">Customer Notified</div>
+                        <div class="col-xs-12">
+                           <em class="mr-xs fa fa-2x" ng-click="(kom.siNotified==='Y')?(kom.siNotified='N'):(kom.siNotified='Y')" ng-class="(kom.siNotified==='Y')?'fa-check-circle-o':'fa-circle-thin'"></em>
+                           Yes
+                        </div>
+                        
+                     </div>
+
+
+                     <!--<span class="text-sm mr">Customer Notified</span>
                      <div class="checkbox c-checkbox h4">
                         <label>
                         <input type="checkbox" checked="" ng-model="kom.siNotified">
                         <span class="fa fa-check mr"></span>Yes</label>
-                     </div>
+                     </div>-->
                   </div>
                </div>
             </div>
@@ -371,7 +392,7 @@
                <div class="row " ng-if="kom.editSr!==true">
                   <div class="col-xs-4 pb"> 
                      <span class="text-sm mr">Job Completed</span><br>
-                     <span class="h4">{{kom.jc?'Yes':'No'}}</span>
+                     <span class="h4">{{(kom.jobCompeted==='Y')?'Yes':'No'}}</span>
                   </div>
                   <div class="col-xs-8 pb">
                      <span class="text-sm mr">Incomplete/Followup</span><br>
@@ -380,12 +401,18 @@
                </div>
                <div class="row" ng-if="kom.editSr===true">
                   <div class="col-xs-4 pb">
-                     <span class="text-sm mr">Job Completed</span>
-                     <div class="checkbox c-checkbox h4">
-                        <label>
-                        <input type="checkbox" checked="" ng-model="kom.jc">
-                        <span class="fa fa-check mr"></span>Yes</label>
+                     
+
+                  <div class="row">
+                        <div class="text-sm col-xs-12">Job Completed</div>
+                        <div class="col-xs-12">
+                           <em class="mr-xs fa fa-2x" ng-click="(kom.jobCompeted==='Y')?(kom.jobCompeted='N'):(kom.jobCompeted='Y')" ng-class="(kom.jobCompeted==='Y')?'fa-check-circle-o':'fa-circle-thin'"></em>
+                           Yes
+                        </div>
+                        
                      </div>
+
+
                   </div>
                   <div class="col-xs-8 pb">
                      <span class="text-sm mr">Incomplete/Followup</span>
@@ -398,12 +425,12 @@
             <div class="row section-break" >
                <div class="col-xs-12" ng-if="kom.editSr!==true">
                   <span class="text-sm mr">Additional Contacts</span><br>
-                  <span class="h4">{{kom.additionalContacts||'-'}}</span>
+                  <span class="h4">{{kom.additionalContact||'-'}}</span>
                </div>
                <div class="col-xs-12" ng-if="kom.editSr===true">
                   <span class="text-sm mr">Additional Contacts</span>
                      <div class="form-group mt-sm">
-                        <input type="text" placeholder="" ng-model="kom.additionalContacts" class="form-control">
+                        <input type="text" placeholder="" ng-model="kom.additionalContact" class="form-control">
                      </div>
                </div>
             </div>

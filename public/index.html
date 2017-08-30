@@ -1,22 +1,35 @@
 <!doctype html>
 <html ng-app="io">
 <head>
+<title>Komori</title>
+<meta name="theme-color" content="#fff">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 
 <script type="text/javascript" src="scripts/jquery-3.2.1.min.js"></script> 
-<script type="text/javascript" src="scripts/angular.min.js"></script>	
-<script type="text/javascript" src="scripts/angular-ui-router.min.js"></script>	
-<script type="text/javascript" src="scripts/signature.js"></script>	
-	
-<script type="text/javascript" src="scripts/test-offline.js"></script>
+<script type="text/javascript" src="scripts/angular.min.js"></script> 
+<script type="text/javascript" src="scripts/angular-ui-router.min.js"></script> 
+
 <script type="text/javascript" src="app.js"></script>
-<script type="text/javascript" src="app/app.controller.js"></script>	
+<script type="text/javascript" src="app/app.controller.js"></script>  
+
+<script type="text/javascript" src="scripts/signature.js"></script> 
+<script type="text/javascript" src="scripts/test-offline.js"></script>
+
+<!--<script type="text/javascript" src="dist/app.js" ></script>-->
 
 <link href="https://fonts.googleapis.com/css?family=Cabin:400,500,600,700" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="styles/fontAwesome/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="styles/simple-line-icons.css">
-<link rel="stylesheet" type="text/css" href="styles/animate.min.css">
-<link rel="stylesheet" type="text/css" href="styles/app.styles.css">
+<!--<link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+
+<link rel="stylesheet" type="text/css" href="styles/app.styles.css">  
+<link rel="stylesheet" type="text/css" href="styles/animate.min.css">-->
+<link rel="stylesheet" type="text/css" href="dist/app.css" >
+
+<link rel="stylesheet" type="text/css" href="styles/fontAwesome/font-awesome.min.css" >
+<link rel="stylesheet" type="text/css" href="styles/simple-line-icons.css" > 
+
+
+<link rel="manifest" href="manifest.json">
 
 
 
@@ -25,12 +38,16 @@
 
 <!-- Code | BEGIN -->
 
+
+
 	<div class="header">
-		<img src="resources/Logo.png" style="width: 13%;" >
+		<img src="resources/Logo.png" alt="KOMORI" style="width: 13%;" >
 	</div>
 
 
 <div class="contentFrame pv" ng-controller="mainController">
+
+  
 
   <div class="row pv">
     <!--    <div class="col-xs-12 ">
@@ -57,6 +74,11 @@
 
 </div>
 <!-- Code | END -->
-	
+
+
+
+
+
+
 </body>
 </html>

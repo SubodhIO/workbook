@@ -280,7 +280,19 @@ app.service('offlineDbStore',function($q,appParams){
 						if(cursor){
 							console.log('OFFLINEDBSTORE | Query '+tableName);
 							cursor.value.stored = true;
-							storeData.push(cursor.value);
+							// Filter code
+							if(params && Object.keys(params).length>0){
+								Object.keys(params).forEach(function(k){
+									console.log('***'+cursor.value[k]);
+									if(cursor.value[k]==params[k]){
+										storeData.push(cursor.value);		
+									}
+								});
+							}
+							else{
+								storeData.push(cursor.value);	
+							}
+							
 							cursor.continue();
 						}
 						else {
@@ -480,12 +492,7 @@ app.service('onlineDbStore',function($q,$http,appParams){
 
 			store.open().then(function(res){
 
-				/*var queryParams = {
-					params: {
-						executeCountSql: 'N'
-					},
-					sessionId : appParams.params.onlineDbStore.sessionId
-				};
+				/*var queryParams = 
 
 				if(tableName!='KOMSRHeader'){
 
@@ -493,24 +500,55 @@ app.service('onlineDbStore',function($q,$http,appParams){
           			queryParams.whereClauseParams = [appParams.params.viewSr.srId];
 				}*/
 
-				params.sessionId = appParams.params.onlineDbStore.sessionId;
+				//params.sessionId = appParams.params.onlineDbStore.sessionId;
 
-				$http.post(appParams.params.onlineDbStore.api+'/'+tableName,params).then(
+				var queryParams = {
+					params: {
+						executeCountSql: 'N'
+					},
+				};
+
+				/*queryParams.whereClause = "#srId# = ?";
+	          	queryParams.whereClauseParams = [srId];*/
+
+	          	if(params && Object.keys(params).length>0 ){
+
+		          	queryParams.whereClause = "";
+					queryParams.whereClauseParams = [];
+
+
+					Object.keys(params).forEach(function(k){
+						console.log('K | '+k+' / V | '+params[k]);
+						if(queryParams.whereClause !== ""){
+							queryParams.whereClause += " and ";
+						}
+						queryParams.whereClause += " #"+k+"# = ? ";
+
+						queryParams.whereClauseParams.push(params[k]);
+
+					});
+
+	          	}
+
+
+				queryParams.sessionId = appParams.params.onlineDbStore.sessionId;
+
+				$http.post(appParams.params.onlineDbStore.api+'/'+tableName,queryParams).then(
 						function(res){
 
 							if(res.data.status === 'ERROR'){
-								console.log('ONLINEDBSTORE | QUERY | Error');
+								console.log('ONLINEDBSTORE | QUERY | Error | '+tableName);
 								reject(res.data);
 							}
 							else {
-								console.log('ONLINEDBSTORE | QUERY | Success');
-								console.log(JSON.stringify(res.data.data));
+								console.log('ONLINEDBSTORE | QUERY | Success | '+tableName);
+								//console.log(JSON.stringify(res.data.data));
 								resolve(res.data.data);								
 							}
 
 						},
 						function(err){
-							console.log('ONLINEDBSTORE | QUERY | ERROR');
+							console.log('ONLINEDBSTORE | QUERY | ERROR | '+tableName);
 							reject('error');							
 						}
 					);
@@ -519,7 +557,7 @@ app.service('onlineDbStore',function($q,$http,appParams){
 
 			},function(err){
 				
-				console.log('ONLINEDBSTORE | QUERY | Error');
+				console.log('ONLINEDBSTORE | QUERY | Error | '+tableName);
 				reject('error');
 
 			});
@@ -768,72 +806,26 @@ app.service('dbStore',function($q,offlineDbStore,onlineDbStore,online,appParams)
 		});
 	};
 
-	this.loadOfflineData = function(){
-		/* load all the offline data */
-
+	this.queryOffline = function(tableName,limit,params){
 		return $q(function(resolve,reject){
-			offlineDbStore.query('KOMSRHeader',0,{}).then(function(res){
-
-				
-				appParams.params.offline.srHeaderList = [];
-				appParams.params.offline.srHeaderList.push(res);
-
-				if(res.length){
-					var prArr = [];
-					/* load the Lines */
-					offlineDbStore.query('KOMSRLines',0,{}).then(function(res){
-						appParams.params.offline.srLineList = [];
-						appParams.params.offline.srLineList.push(res);
-						console.log('SUCCESS | LOAD OFFLINE DATA | KOMSRLines');
-					},function(err){
-						console.log('ERROR | LOAD OFFLINE DATA | KOMSRLines');
-					});
-					/* load the Notes */
-					offlineDbStore.query('KOMSRNotes',0,{}).then(function(res){
-						appParams.params.offline.srNoteList = [];
-						appParams.params.offline.srNoteList.push(res);
-						console.log('SUCCESS | LOAD OFFLINE DATA | KOMSRNotes');
-					},function(err){
-						console.log('ERROR | LOAD OFFLINE DATA | KOMSRNotes');
-					});;
-					/* load the TravelLog */
-					offlineDbStore.query('KOMSRTravelLog',0,{}).then(function(res){
-						appParams.params.offline.srTravelLogList = [];
-						appParams.params.offline.srTravelLogList.push(res);
-						console.log('SUCCESS | LOAD OFFLINE DATA | KOMSRTravelLog');
-					},function(err){
-
-					});
-
-					Promise.all(prArr).then(function(res){
-						resolve('success');
-					}).catch(function(err){
-						reject(err);
-					})
-				}
-				else {
-					resolve('success');
-				}
-
+			offlineDbStore.query(tableName,limit,params).then(function(res){
+				resolve(res);
 			},function(err){
 				reject(err);
 			});
-
 		});
-
-
 	};
 
 	this.query = function(tableName,limit,params){
 		return $q(function(resolve,reject){
 
-			if(!params){
+/*			if(!params){
 				 params = {
 					params: {
 						executeCountSql: 'N'
 					},
 				};
-			}
+			}*/
 
 			online.getStatus().then(function(res){
 
@@ -863,6 +855,64 @@ app.service('dbStore',function($q,offlineDbStore,onlineDbStore,online,appParams)
 
 		});
 	};
+
+	this.loadOfflineData = function(){
+		/* load all the offline data */
+
+		return $q(function(resolve,reject){
+			offlineDbStore.query('KOMSRHeader',0,{}).then(function(res){
+
+				
+				appParams.params.offline.srHeaderList = res;
+				//appParams.params.offline.srHeaderList.push(res);
+
+				if(res.length){
+					var prArr = [];
+					/* load the Lines */
+					offlineDbStore.query('KOMSRLines',0,{}).then(function(res){
+						appParams.params.offline.srLineList = res;
+						//appParams.params.offline.srLineList.push(res);
+						console.log('SUCCESS | LOAD OFFLINE DATA | KOMSRLines');
+					},function(err){
+						console.log('ERROR | LOAD OFFLINE DATA | KOMSRLines');
+					});
+					/* load the Notes */
+					offlineDbStore.query('KOMSRNotes',0,{}).then(function(res){
+						appParams.params.offline.srNoteList = res;
+						//appParams.params.offline.srNoteList.push(res);
+						console.log('SUCCESS | LOAD OFFLINE DATA | KOMSRNotes');
+					},function(err){
+						console.log('ERROR | LOAD OFFLINE DATA | KOMSRNotes');
+					});;
+					/* load the TravelLog */
+					offlineDbStore.query('KOMSRTravelLog',0,{}).then(function(res){
+						appParams.params.offline.srTravelLogList = res;
+						//appParams.params.offline.srTravelLogList.push(res);
+						console.log('SUCCESS | LOAD OFFLINE DATA | KOMSRTravelLog');
+					},function(err){
+
+					});
+
+					Promise.all(prArr).then(function(res){
+						resolve('success');
+					}).catch(function(err){
+						reject(err);
+					})
+				}
+				else {
+					resolve('success');
+				}
+
+			},function(err){
+				reject(err);
+			});
+
+		});
+
+
+	};
+
+	
 
 	this.saveRow = function(tablename,row){
 		/* delegate as per the status of connectivity */
@@ -905,7 +955,7 @@ app.service('dbStore',function($q,offlineDbStore,onlineDbStore,online,appParams)
 						srId = 2;
 					} */
 
-				this.mode='online';
+				/*this.mode='online';
 				var queryParams = {
 					params: {
 						executeCountSql: 'N'
@@ -913,7 +963,13 @@ app.service('dbStore',function($q,offlineDbStore,onlineDbStore,online,appParams)
 				};
 
 				queryParams.whereClause = "#srId# = ?";
-	          	queryParams.whereClauseParams = [srId];
+	          	queryParams.whereClauseParams = [srId];*/
+
+	          	 queryParams = {
+            		"srId": srId
+        		}
+
+
 
 				/*if(tableName!='KOMSRHeader'){
 
@@ -1098,42 +1154,78 @@ app.service('dbStore',function($q,offlineDbStore,onlineDbStore,online,appParams)
 
 											/* DELETE LINES */
 
-											prSync.push(onlineDbStore.saveAll('KOMSRLines',listLines));
-											prSync.push(onlineDbStore.saveAll('KOMSRTravelLog',listTravelInfo));
-											prSync.push(onlineDbStore.saveAll('KOMSRNotes',listNotes));
 
-											angular.forEach(listLines,function(val){
-												val.remoteAction='U';
-											});
+											onlineDbStore.saveAll('KOMSRLines',listLines).then(function(res){
 
-											angular.forEach(listTravelInfo,function(val){
-												val.remoteAction='U';
-											});
+													console.log('SYNC | KOMSRLINES | Update Remote Successful');
 
-											angular.forEach(listNotes,function(val){
-												val.remoteAction='U';
-											});
+													angular.forEach(listLines,function(val){
+														val.remoteAction='U';
+													});
 
-											prSync.push(offlineDbStore.saveAll('KOMSRLines',listLines));
-											prSync.push(offlineDbStore.saveAll('KOMSRTravelLog',listTravelInfo));
-											prSync.push(offlineDbStore.saveAll('KOMSRNotes',listNotes));
+													offlineDbStore.saveAll('KOMSRLines',listLines).then(function(res){
 
-											Promise.all(prSync).then(function(res){
+														console.log('SYNC | KOMSRLINES | Update Local Successful');
 
-												resolve(res);
-												/*
-												offlineDbStore.clearAll().then(function(res){
-													console.log('CLEARED THE LOCAL CAHCE');
-													resolve('sucess');
-												},function(err){
-													console.log('FAILED TO CLEAR THE LOCAL CAHCE');
-													resolve('sucess');	
-												})*/
-												
-											}).catch(function(err){
+														onlineDbStore.saveAll('KOMSRTravelLog',listTravelInfo).then(function(res){
+
+															console.log('SYNC | KOMSRTravelLog | Update Remote Successful');
+
+															angular.forEach(listTravelInfo,function(val){
+																val.remoteAction='U';
+															});
+
+															offlineDbStore.saveAll('KOMSRTravelLog',listTravelInfo).then(function(res){
+
+																	console.log('SYNC | KOMSRTravelLog | Update Local Successful');
+
+																	onlineDbStore.saveAll('KOMSRNotes',listNotes).then(function(res){
+
+																		console.log('SYNC | KOMSRNotes | Update Remote Successful');
+
+																		angular.forEach(listNotes,function(val){
+																			val.remoteAction='U';
+																		});		
+
+																		offlineDbStore.saveAll('KOMSRNotes',listNotes).then(function(res){
+
+																			console.log('SYNC | KOMSRNotes | Update Local Successful');
+																			resolve('success');
+
+
+																		},function(err){
+																			console.log('SYNC | Could not update the KOMSRNotes Locally | '+err);
+																			reject(err);		
+																		});
+																														
+																	},function(err){
+																		console.log('SYNC | Could not Remote update the KOMSRNotes | '+err);
+																		reject(err);
+																	});
+
+															},function(err){
+																console.log('SYNC | Could not update the KOMSRTravelLog Locally | '+err);
+																reject(err);		
+															});
+															
+
+														},function(err){
+															console.log('SYNC | Could not Remote update the KOMSRTravelLog | '+err);
+															reject(err);
+														});
+
+
+													},function(err){
+														console.log('SYNC | Could not  update the KOMSRLINES Locally | '+err);
+														reject(err);		
+													});
+
+											},function(err){
+												console.log('SYNC | Could not remote update the KOMSRLINES | '+err);
 												reject(err);
 											});
-										
+
+											
 
 
 										},function(err){

@@ -1,6 +1,7 @@
 angular.module('io').controller('AppCtrl', function($scope, $stateParams, $state, $rootScope, online, dbStore, appParams, $timeout) {
 
     $scope.kom = {};
+    $scope.offlineData = {};
 
     $scope.viewSr = function(sr) {
         $scope.setExitClass();
@@ -156,30 +157,19 @@ angular.module('io').controller('AppCtrl', function($scope, $stateParams, $state
     $scope.loadSR = function() {
 
         $scope.headerLoading = true;
-        var queryParams = {
-            params: {
-                executeCountSql: 'N'
-            }
-        };
 
-        dbStore.query('KOMSRHeader', 0, queryParams).then(function(res) {
+        dbStore.loadOfflineData().then(function(res){
+            console.log('SUCCESS | LOAD OFFLINE DATA | '+res);
+            $scope.komList = appParams.params.offline.srHeaderList;
+            $scope.offlineData.komList = appParams.params.offline.srHeaderList;
+        },function(err){
+            console.log('ERROR | LOAD OFFLINE DATA | '+err);
+        });
+
+        dbStore.query('KOMSRHeader', 0, {}).then(function(res) {
             $scope.headerLoading = false;
             $scope.showNotification('SUCCESS', 'Loaded the Service Requests');
             $scope.komList = res;
-
-            /* SAVE LOCAL CODE HERE*/
-            online.getStatus().then(function(res){
-                if(res === 'online'){
-                    dbStore.loadOfflineData().then(function(res){
-                        console.log('SUCCESS | LOAD OFFLINE DATA | '+res);
-                    },function(err){
-                        console.log('ERROR | LOAD OFFLINE DATA | '+err);
-                    });
-                }                
-            },function(err){
-                console.log('ERROR | LOAD OFFLINE DATA | '+err);
-            });
-            
 
         }, function(err) {
             $scope.headerLoading = false;
@@ -289,7 +279,7 @@ angular.module('io').controller('AppCtrl', function($scope, $stateParams, $state
     $scope.ko.editTi = false;
     $scope.ko.scrolled = false;
 
-    angular.element($window).bind("scroll", function() {
+    /*angular.element($window).bind("scroll", function() {
 
         //var element = $element.find('#actionButtons');
         //var offset = angular.element( document.querySelector( '#actionButtons' ) ).offset().top;
@@ -297,23 +287,24 @@ angular.module('io').controller('AppCtrl', function($scope, $stateParams, $state
 
             if (this.pageYOffset >= 40) {
                  $scope.ko.scrolled = true;
-                 console.log('scrolled | true');
+//                 console.log('scrolled | true');
 
              } else {
                  $scope.ko.scrolled = false;
-                 console.log('scrolled | false');
+  //               console.log('scrolled | false');
              }
 
             
-            /* if (this.pageYOffset >= 100) {
-                 scope.boolChangeClass = true;
-                 console.log('Scrolled below header.');
-             } else {
-                 scope.boolChangeClass = false;
-                 console.log('Header is in view.');
-             }
-            scope.$apply();*/
-        });
+        //     if (this.pageYOffset >= 100) {
+        //         scope.boolChangeClass = true;
+        //         console.log('Scrolled below header.');
+        //     } else {
+        //         scope.boolChangeClass = false;
+        //         console.log('Header is in view.');
+        //     }
+        //    scope.$apply(); 
+        
+        });*/
 
 
     $scope.editAction = function() {
@@ -459,7 +450,7 @@ angular.module('io').controller('AppCtrl', function($scope, $stateParams, $state
     };
 
 
-    if (appParams.params.viewSr) {
+    if ($stateParams.srNumber) {
         console.log('SR For View | ' + JSON.stringify(appParams.params.viewSr));
 
         /*
@@ -468,41 +459,79 @@ angular.module('io').controller('AppCtrl', function($scope, $stateParams, $state
         	Load SR Travel Info
         	Load SR Notes
         */
-        $scope.kom = appParams.params.viewSr;
-
-        $scope.kom.remoteAction= 'U';
-
-        //Signature from DB
-        //customerSignature.fromData($scope.kom.customerSignature);
         var queryParams = {};
         queryParams.whereClause = "#srId# = ?";
-        queryParams.whereClauseParams = [appParams.params.viewSr.srId];
+        queryParams.whereClauseParams = [$stateParams.srNumber];
 
+        queryParams = {
+            "srId": $stateParams.srNumber
+        }
 
+        /* OFFLINE FIRST*/
+        dbStore.queryOffline('KOMSRHeader',0,queryParams).then(function(res){
+            $scope.kom = res[0];
+            $scope.kom.remoteAction= 'U';
 
-        var parsedData = JSON.parse($scope.kom.customerSignature);
-        customerSignature.fromData(parsedData);
-        customerSignature.off();
+            var parsedData = JSON.parse($scope.kom.customerSignature);
+            customerSignature.fromData(parsedData);
+            customerSignature.off();
 
-        dbStore.query('KOMSRLines', 0, queryParams).then(function(res) {
-            angular.forEach(res,function(val){
-                val.remoteAction = 'U';
+            dbStore.queryOffline('KOMSRLines', 0, queryParams).then(function(res){
+                $scope.kom.serviceList = res;
+            },function(err){
+
             });
-            $scope.kom.serviceList = res;
-            console.log('Loaded the service req details for SR #' + $scope.kom.srId);
-        }, function(err) {
-            console.log('ERROR | Loading the service req details for SR #' + $scope.kom.srId+' | '+err);
+
+            dbStore.queryOffline('KOMSRTravelLog', 0, queryParams).then(function(res){
+                $scope.kom.savedTravelList = res;
+            },function(err){
+
+            });
+
+            dbStore.queryOffline('KOMSRNotes', 0, queryParams).then(function(res){
+                $scope.kom.srNoteList = res;
+            },function(err){
+
+            });            
+
+        },function(err){
+
         });
 
-        dbStore.query('KOMSRTravelLog', 0, queryParams).then(function(res) {
-            angular.forEach(res,function(val){
-                val.remoteAction = 'U';
+
+        dbStore.query('KOMSRHeader',0,queryParams).then(function(res){
+            $scope.kom = res[0];//appParams.params.viewSr;
+
+            $scope.kom.remoteAction= 'U';
+
+            //Signature from DB
+            //customerSignature.fromData($scope.kom.customerSignature);
+
+            var parsedData = JSON.parse($scope.kom.customerSignature);
+            customerSignature.fromData(parsedData);
+            customerSignature.off();
+
+            dbStore.query('KOMSRLines', 0, queryParams).then(function(res) {
+                angular.forEach(res,function(val){
+                    val.remoteAction = 'U';
+                });
+                $scope.kom.serviceList = res;
+                console.log('Loaded the service req details for SR #' + $scope.kom.srId);
+            }, function(err) {
+                console.log('ERROR | Loading the service req details for SR #' + $scope.kom.srId+' | '+err);
             });
-            $scope.kom.savedTravelList = res;
-            console.log('Loaded the Travel details for SR #' + $scope.kom.srId);
-        }, function(err) {
-            console.log('ERROR | Loading the Travel req details for SR #' + $scope.kom.srId);
+
+            dbStore.query('KOMSRTravelLog', 0, queryParams).then(function(res) {
+                angular.forEach(res,function(val){
+                    val.remoteAction = 'U';
+                });
+                $scope.kom.savedTravelList = res;
+                console.log('Loaded the Travel details for SR #' + $scope.kom.srId);
+            }, function(err) {
+                console.log('ERROR | Loading the Travel req details for SR #' + $scope.kom.srId);
+            });
         });
+            
 
     } else {
         $scope.goToHome();

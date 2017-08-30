@@ -11,8 +11,12 @@
    </div>
 </div>
 <div class="row mv">
-   <div class="col-xs-12 pv animated" ng-class="searchClass">
-      <span class="h3" > Hello, User </span>
+   <div class="col-xs-6 pv animated" ng-class="searchClass">
+      <span class="h3 text-blue-light" > Hello, User </span>
+   </div>
+   <div class="col-xs-6 text-right pv animated" ng-class="searchClass">
+      <span class="btn btn-primary" ng-click="testSync()"> Sync </span>
+      <span class="btn btn-primary ml" ng-click="clearLocal()"> Clear  </span>
    </div>
    <!--<div class="col-xs-6 pv">
       <div class="card text-center ">
@@ -21,16 +25,13 @@
       </div>-->
 </div>
 <div class="row mv animated" ng-class="searchClass">
-   <div class="col-xs-8 pv">
+   <div class="col-xs-12 pv">
       <div class="input-group m-b">
          <input type="text" class="no-border-rad form-control input-lg" ng-model="srSearch" placeholder="Search Service Requests">
          <span class="input-group-addon bg-blue-dark no-border-rad ph"><em class="icon-magnifier"></em></span>
       </div>
    </div>
-   <div class="col-xs-4 pv">
-      <span class="btn btn-primary" ng-click="testSync()"> Sync </span>
-      <span class="btn btn-primary ml" ng-click="clearLocal()"> Clear </span>
-   </div>
+   
 </div>
 <div class="row mv animated" ng-class="cardClass" ng-if="!srSearch">
    <div class="col-xs-4 pv">
@@ -53,19 +54,29 @@
    </div>
 </div>
 <div class="row " ng-class="{'section-break':!srSearch}">
-   <div class="col-xs-12 mv" ng-if="headerLoading">
+   <!--<div class="col-xs-12 mv" ng-if="headerLoading">
       <loader></loader>
-   </div>
+   </div>-->
    <div class="col-xs-12" ng-if="!srSearch">
       <span class="h4 text-blue-light animated " ng-class="srCardHeaderClass" ng-if="komList.length>0">Service Requests for Today</span>
-      <span class="h4 text-blue-light animated " ng-class="srCardHeaderClass" ng-if="komList.length===0">No Service Requests available</span>
+      <span class="h4 text-blue-light animated " ng-class="srCardHeaderClass" ng-if="komList.length===0 && !headerLoading">No Service Requests available</span>
    </div>
+
+   <!--<div class="col-xs-12 pv">
+      OFFLINE LIST
+      <div class="row">
+         <div ng-repeat="s in offlineData.komList" class="col-xs-12">
+            {{s}}
+         </div>
+      </div>
+   </div>-->
+
    <div class="col-xs-12 pv">
       <div class="">
          <div class="row">
             <div ng-repeat="s in komList |  filter:srFilter | limitTo: 4 track by $index">
                <div class="clearfix" ng-if="$index%2===0"></div>
-               <div class="col-xs-6">
+               <div class="col-sm-6 col-xs-12">
                   <div class="card sr-card bg-white mv animated " ng-class="srCardClass">
                      <div class="pop-offline-button h4 m0 " ng-class="{'spin':(headerSavingId===s.srId)}" ng-click="saveOffline(s.srId)" ><em class='icon-cloud-download'></em></div>
                      <div class="row text-blue ">
@@ -110,7 +121,7 @@
                   <tr>
                   <th>SR#</th>
                   <th>Model</th>
-                  
+                     
                   <th>Customer</th>
                   <th>Maintainance</th>
                   

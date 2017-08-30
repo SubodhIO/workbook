@@ -39,6 +39,6 @@ app.controller('mainController',function($scope,$state){
 	};
 
 	//initialise Service Workers
-	//$scope.checkServiceWorker();
+	$scope.checkServiceWorker();
 
 })
