@@ -85,7 +85,20 @@ app.service('dbStore',function($q,offlineDbStore,onlineDbStore,syncDbStore,onlin
 	store.syncOfflineDbStore = function(tableName){
 		return $q(function(resolve,reject){
 			if(syncStore[tableName].length>0){
+				angular.forEach(syncDbStore[tableName],function(val){
 
+
+					queryParams = {
+			            "srId": val.srId
+			        }
+
+			        offlineDbStore.query(tableName,0,queryParams).then(function(res){
+
+			        },function(err){
+
+			        });
+
+				});
 			}	
 			else{
 				resolve('success');	
