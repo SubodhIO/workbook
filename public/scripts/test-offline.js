@@ -919,7 +919,7 @@ app.service('dbStore',function($q,offlineDbStore,onlineDbStore,online,appParams)
 		return $q(function(resolve,reject){
 
 			online.getStatus().then(function(res){
-
+				row.lastModifiedDate = new Date();
 				if(res==='online'){
 					this.mode='online';
 					return onlineDbStore.saveRow(tablename,row);
